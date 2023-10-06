@@ -12,31 +12,31 @@ IATHook is a lightweight and easy-to-use IAT (Import Address Table) Hooking libr
 
 #include "IATHook.hpp"
 
-typedef int(__stdcall* MessageBox_t)(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType);
+typedef int(WINAPI* MessageBox_t)(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType);
 MessageBox_t MessageBoxOriginal;
 
-int MessageBoxDetour(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
+int WINAPI MessageBoxDetour( HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType )
 {
-    printf("MessageBoxA hook has been called! \n");
+	printf( "MessageBoxA hook has been called! \n" );
 
-    return MessageBoxOriginal(NULL, "Captain Hook!", "IAT_HOOK", 0);
+	return MessageBoxOriginal( NULL, "Captain Hook!", "IAT_HOOK", 0 );
 }
 
 int main()
 {
-    MessageBoxA(NULL, "Before hooking!", "Test", NULL);
+	MessageBoxA( NULL, "Before hooking!", "Test", NULL );
 
-    // create hook
-    if (IAT_HOOK::Create("user32.dll", "MessageBoxA", &MessageBoxDetour, (void**)&MessageBoxOriginal) != IAT_OK)
-        printf("Error while hooking MessageBoxA! \n");
+	// create hook
+	if ( IAT_HOOK::Create( "user32.dll", "MessageBoxA", &MessageBoxDetour, (void**)&MessageBoxOriginal ) != IAT_OK )
+		printf( "Error while hooking MessageBoxA! \n" );
 
-    MessageBoxA(NULL, "After hooking!", "Test", NULL);
+	MessageBoxA( NULL, "After hooking!", "Test", NULL );
 
-    // restore hook
-    if (IAT_HOOK::Restore("MessageBoxA"))
-        printf("Error while restoring MessageBoxA! \n");
+	// restore hook
+	if( IAT_HOOK::Restore( "MessageBoxA" ) != IAT_OK )
+		printf( "Error while restoring MessageBoxA! \n" );
 
-    MessageBoxA(NULL, "After restoring!", "Test", NULL);
+	MessageBoxA( NULL, "After restoring!", "Test", NULL );
 
     return 0;
 }
