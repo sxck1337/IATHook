@@ -28,7 +28,7 @@ IAT_STATUS IAT_HOOK::HookAPI( LPCSTR module_name, LPCSTR function_name, LPVOID d
 		{
 			PIMAGE_IMPORT_BY_NAME import_data = (PIMAGE_IMPORT_BY_NAME)((uintptr_t)image_base + image_org_thunk_data->u1.AddressOfData);
 
-			if (strcmp( function_name, import_data->Name ) == NULL)
+			if (_stricmp( function_name, import_data->Name ) == NULL)
 			{
 				DWORD unused_protect = 0;
 				MEMORY_BASIC_INFORMATION mbi;
@@ -56,11 +56,11 @@ IAT_STATUS IAT_HOOK::HookAPI( LPCSTR module_name, LPCSTR function_name, LPVOID d
 					new_entry.original = orig_func;
 					new_entry.target_module = target_module;
 
-					IAT_HOOK::hooks.push_back( new_entry );
+					hooks.push_back( new_entry );
 				}
 				else
 				{
-					IAT_HOOK::hooks.erase( std::remove_if( IAT_HOOK::hooks.begin( ), IAT_HOOK::hooks.end( ),
+					hooks.erase( std::remove_if( hooks.begin( ), hooks.end( ),
 						[&function_name]( const IAT_ENTRY& entry ) {
 							return entry.function_name == function_name;
 						}
@@ -82,11 +82,11 @@ IAT_STATUS IAT_HOOK::HookAPI( LPCSTR module_name, LPCSTR function_name, LPVOID d
 
 IAT_STATUS IAT_HOOK::Create( LPCSTR module_name, LPCSTR function_name, LPVOID detour, LPVOID* original, LPCSTR target_module )
 {
-	if (!IAT_HOOK::hooks.empty( ))
+	if (!hooks.empty( ))
 	{
-		for (auto& entry : IAT_HOOK::hooks)
+		for (auto& entry : hooks)
 		{
-			if (strcmp( entry.function_name, function_name ) == NULL)
+			if (_stricmp( entry.function_name, function_name ) == NULL)
 				return IAT_DUPLICATE;
 		}
 	}
@@ -101,12 +101,12 @@ IAT_STATUS IAT_HOOK::Create( LPCSTR module_name, LPCSTR function_name, LPVOID de
 
 IAT_STATUS IAT_HOOK::Restore( LPCSTR function_name )
 {
-	if (IAT_HOOK::hooks.empty( ))
+	if (hooks.empty( ))
 		return IAT_NOENTRY;
 
-	for (auto& entry : IAT_HOOK::hooks)
+	for (auto& entry : hooks)
 	{
-		if (strcmp( entry.function_name, function_name ) == NULL)
+		if (_stricmp( entry.function_name, function_name ) == NULL)
 		{
 			IAT_STATUS status = HookAPI( entry.module_name, entry.function_name, entry.original, NULL, entry.target_module, 1 );
 
