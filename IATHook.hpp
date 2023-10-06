@@ -32,13 +32,13 @@
 
 enum IAT_STATUS
 {
-	IAT_UNKNOWN = -1,		// used internally
-	IAT_OK,				// success 
+	IAT_UNKNOWN = -1,	// used internally
+	IAT_OK,			// success 
 	IAT_PROTECT,		// failed to protect
 	IAT_RESTORE,		// failed to restore old protection
 	IAT_NOTFOUND,		// module name or function not found
 	IAT_DUPLICATE,		// function name already hooked
-	IAT_NOENTRY			// no hook found with that name
+	IAT_NOENTRY		// no hook found with that name
 };
 
 struct IAT_ENTRY
