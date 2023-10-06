@@ -59,9 +59,9 @@ public:
 	//
 	//   function_name    [in]  name of the function to hook.        
 	//
-	//	 detour			  [in]	pointer to your hook.          
+	//   detour           [in]  pointer to your hook.          
 	//
-	//   original		  [out] pointer of the original function. (this parameter can be NULL if not needed)
+	//   original	      [out] pointer of the original function. (this parameter can be NULL if not needed)
 	//						
 	//   target_module    [in]  name of the module you want to target. (NULL by default, targets the main module of the process)
 	static IAT_STATUS Create( LPCSTR module_name, LPCSTR function_name, LPVOID detour, LPVOID* original, LPCSTR target_module = NULL );
