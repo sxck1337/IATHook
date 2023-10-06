@@ -44,6 +44,6 @@ int main()
 
 ## License
 
-This library is released under the [MIT License](LICENSE.md).
+This library is released under the [MIT License](LICENSE).
 
 Feel free to contribute, report issues, or make suggestions!
